@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FLOWERS — Generative Brand Identity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F8F7F4;
+  --surface: #FFFFFF;
+  --text: #111111;
+  --text-2: #666666;
+  --text-3: #999999;
+  --border: #EAEAE6;
+  --border-light: #F2F2EE;
+  --accent: #E91E63;
+  --accent-wash: rgba(233,30,99,0.04);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.03);
+  --shadow-hover: 0 2px 4px rgba(0,0,0,0.06), 0 8px 32px rgba(0,0,0,0.06);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family: 'Inter', -apple-system, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ========== LAYOUT ========== */
+.page {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ========== ACCENT BAR ========== */
+.accent-bar {
+  height: 3px;
+  background: var(--accent);
+  transition: background var(--transition);
+}
+
+/* ========== HEADER ========== */
+.page-header {
+  padding: 56px 0 40px;
+}
+
+.page-header .eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-header .eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--text-3);
+}
+
+.page-header h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(32px, 5vw, 44px);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.page-header h1 em {
+  font-style: italic;
+  color: var(--text-2);
+}
+
+.page-header .intro {
+  font-size: 15px;
+  color: var(--text-2);
+  max-width: 540px;
+  line-height: 1.7;
+}
+
+/* ========== HERO ========== */
+.hero-section {
+  margin-bottom: 80px;
+}
+
+.hero-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  position: relative;
+  transition: box-shadow var(--transition);
+}
+
+.hero-inner {
+  padding: 56px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+  position: relative;
+  background: var(--accent-wash);
+  transition: background var(--transition);
+}
+
+/* Unified Brand Mark */
+.brand-mark-ai,
+.brand-mark-proc {
+  opacity: 1;
+  transition: opacity 0.25s ease;
+  position: relative;
+}
+
+.brand-mark-ai.fading,
+.brand-mark-proc.fading { opacity: 0; }
+
+.brand-mark-proc { display: none; }
+
+/* Wordmark group */
+.wordmark-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.wordmark {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(32px, 5vw, 54px);
+  letter-spacing: 0.18em;
+  color: var(--text);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* The flower-F image sits inline with the text — sized in em so it scales with the font */
+.wordmark .flower-f {
+  display: inline-block;
+  height: 1.35em;
+  width: auto;
+  vertical-align: baseline;
+  margin-bottom: -0.35em;
+  transition: opacity 0.3s ease;
+}
+
+/* Procedural canvas flower inline */
+.wordmark .proc-flower-canvas {
+  display: none;
+  height: 1.6em;
+  width: 1.2em;
+  vertical-align: baseline;
+  margin-bottom: -0.2em;
+  margin-right: -0.18em;
+}
+
+.wordmark-rule {
+  height: 2px;
+  background: var(--text);
+  opacity: 0.12;
+  width: 100%;
+}
+
+.wordmark-sub {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+/* Mode toggle */
+.hero-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-light);
+  background: var(--surface);
+}
+
+.mode-toggle {
+  display: flex;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.mode-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 7px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.mode-btn.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.mode-btn:hover:not(.active) { color: var(--text-2); }
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.seed-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  background: var(--bg);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* ========== CONTROLS ========== */
+.controls-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.ctrl-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ctrl-select {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 36px 9px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath d='M2.5 4l2.5 2.5 2.5-2.5' stroke='%23999' fill='none' stroke-width='1.4' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  transition: border-color 0.15s ease;
+}
+
+.ctrl-select:hover { border-color: var(--text-3); }
+.ctrl-select:focus { outline: none; border-color: var(--accent); }
+
+.ctrl-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ctrl-btn:hover {
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--surface);
+}
+
+.ctrl-btn.accent {
+  background: var(--text);
+  color: var(--surface);
+  border-color: var(--text);
+}
+
+.ctrl-btn.accent:hover { background: #333; border-color: #333; }
+
+.ctrl-spacer { flex: 1; }
+
+/* ========== SECTION HEADERS ========== */
+.section { margin-bottom: 80px; }
+
+.section-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.section-head h2 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.section-head .line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.section-desc {
+  font-size: 14px;
+  color: var(--text-2);
+  margin-bottom: 24px;
+  max-width: 480px;
+}
+
+/* ========== VARIANTS GALLERY ========== */
+.variants-scroll {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.variant-card {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.variant-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+}
+
+.variant-card.selected {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.variant-card canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.variant-card .v-meta {
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.variant-card .v-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* ========== WORLD GRID ========== */
+.world-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.loc-card {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.loc-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.loc-card.active {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.loc-card-img {
+  padding: 20px 20px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 160px;
+  background: var(--accent-wash);
+  transition: background var(--transition);
+}
+
+.loc-card-img img {
+  max-width: 110px;
+  max-height: 110px;
+  object-fit: contain;
+  filter: contrast(1.1);
+}
+
+.loc-card-info {
+  padding: 14px 16px 16px;
+}
+
+.loc-card-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.loc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.loc-card-flower {
+  font-size: 12px;
+  color: var(--text-3);
+  font-style: italic;
+  padding-left: 16px;
+}
+
+/* ========== GRAMMAR ========== */
+.grammar-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 640px) { .grammar-grid { grid-template-columns: 1fr; } }
+
+.grammar-card {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+.grammar-card h3 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.grammar-card h3 .badge {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge-fixed {
+  background: #F0F0EC;
+  color: var(--text-2);
+}
+
+.badge-dynamic {
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
+.grammar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 13px;
+}
+
+.grammar-row:last-child { border-bottom: none; }
+
+.grammar-key { color: var(--text-2); }
+
+.grammar-val {
+  font-weight: 500;
+  color: var(--text);
+  text-align: right;
+}
+
+.grammar-val.dynamic {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.palette-row {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.palette-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ========== CONCEPT CALLOUT ========== */
+.concept-bar {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  padding: 28px 32px;
+  margin-bottom: 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 640px) { .concept-bar { grid-template-columns: 1fr; } }
+
+.concept-item {}
+
+.concept-item .c-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  margin-bottom: 6px;
+}
+
+.concept-item .c-value {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ========== FOOTER ========== */
+.page-footer {
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+
+.page-footer p {
+  font-size: 12px;
+  color: var(--text-3);
+  text-align: center;
+  line-height: 1.7;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 700px) {
+  .hero-inner { padding: 32px 24px; }
+  .wordmark-group { align-items: center; }
+  .wordmark { font-size: 28px !important; }
+  .hero-toolbar { flex-direction: column; gap: 12px; }
+  .controls-bar { flex-direction: column; align-items: stretch; }
+  .ctrl-spacer { display: none; }
+  .concept-bar { grid-template-columns: 1fr; }
+  .world-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+}
+
+/* ========== UTILITIES ========== */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="accent-bar" id="accentBar"></div>
+
+<div class="page">
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="eyebrow">Generative Brand Identity</div>
+    <h1>A brand that <em>lives</em> at<br>every touchpoint</h1>
+    <p class="intro">The wordmark is fixed. The flower is generated at runtime from context signals — location, season, audience. Same grammar, infinite expressions. Always on-brand, never the same twice.</p>
+  </header>
+
+  <!-- CONCEPT BAR -->
+  <div class="concept-bar">
+    <div class="concept-item">
+      <div class="c-label">Invariant</div>
+      <div class="c-value">The wordmark "FLOWERS" stays identical across every expression — typography, weight, spacing are locked.</div>
+    </div>
+    <div class="concept-item">
+      <div class="c-label">Variable</div>
+      <div class="c-value">The flower element changes by context. Each location maps to a native species rendered within brand constraints.</div>
+    </div>
+    <div class="concept-item">
+      <div class="c-label">Rendering</div>
+      <div class="c-value">Two modes: <strong>Curated</strong> marks from AI generation, and <strong>Generative</strong> marks rendered procedurally at runtime.</div>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <div class="hero-card">
+      <div class="hero-inner" id="heroInner">
+        <!-- AI Mode: flower-F image inline with text -->
+        <div class="brand-mark-ai" id="aiMark">
+          <div class="wordmark-group">
+            <div class="wordmark"><img id="aiFlowerImg" class="flower-f" src="" alt="F" />LOWERS</div>
+            <div class="wordmark-rule"></div>
+            <div class="wordmark-sub" id="locLabel">India &middot; Lotus</div>
+          </div>
+        </div>
+        <!-- Procedural Mode: canvas flower inline with text -->
+        <div class="brand-mark-proc" id="procMark">
+          <div class="wordmark-group">
+            <div class="wordmark"><canvas id="procFlowerCanvas" class="proc-flower-canvas" width="120" height="120"></canvas>LOWERS</div>
+            <div class="wordmark-rule"></div>
+            <div class="wordmark-sub" id="locLabel2">India &middot; Lotus</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-toolbar">
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="ai">Curated Mark</button>
+          <button class="mode-btn" data-mode="proc">Generative</button>
+        </div>
+        <div class="hero-meta">
+          <span class="seed-tag" id="seedTag">seed: —</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls-bar">
+      <span class="ctrl-label">Region</span>
+      <select class="ctrl-select" id="locationSelect"></select>
+      <button class="ctrl-btn accent" id="generateBtn">Regenerate</button>
+      <button class="ctrl-btn" id="randomBtn">Random Location</button>
+      <span class="ctrl-spacer"></span>
+    </div>
+  </section>
+
+  <!-- VARIANT GALLERY -->
+  <section class="section" id="variantsSection">
+    <div class="section-head">
+      <h2>Variant Gallery</h2>
+      <div class="line"></div>
+    </div>
+    <p class="section-desc">Every click produces a unique variant — same species, same brand constraints, different seed. Click any card to preview it.</p>
+    <div class="variants-scroll" id="variantsGrid"></div>
+  </section>
+
+  <!-- WORLD GRID -->
+  <section class="section">
+    <div class="section-head">
+      <h2>One Brand, Ten Expressions</h2>
+      <div class="line"></div>
+    </div>
+    <p class="section-desc">Each location maps to a native flower species. The curated AI marks use location-specific colors shaped into the letter F; the procedural variants share structural rules.</p>
+    <div class="world-grid" id="worldGrid"></div>
+  </section>
+
+  <!-- BRAND GRAMMAR -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Brand Grammar</h2>
+      <div class="line"></div>
+    </div>
+    <div class="grammar-grid">
+      <div class="grammar-card">
+        <h3>Invariants <span class="badge badge-fixed">Fixed</span></h3>
+        <div class="grammar-row"><span class="grammar-key">Wordmark</span><span class="grammar-val">FLOWERS</span></div>
+        <div class="grammar-row"><span class="grammar-key">Typeface</span><span class="grammar-val">Playfair Display</span></div>
+        <div class="grammar-row"><span class="grammar-key">Weight</span><span class="grammar-val">400 Regular</span></div>
+        <div class="grammar-row"><span class="grammar-key">Letter Spacing</span><span class="grammar-val">0.22em</span></div>
+        <div class="grammar-row"><span class="grammar-key">Composition</span><span class="grammar-val">Flower left, mark right</span></div>
+        <div class="grammar-row"><span class="grammar-key">Flower Style</span><span class="grammar-val">Monochrome ink / Procedural</span></div>
+      </div>
+      <div class="grammar-card" id="grammarVars">
+        <h3>Variables <span class="badge badge-dynamic">Runtime</span></h3>
+        <div class="grammar-row"><span class="grammar-key">Flower</span><span class="grammar-val dynamic" id="gFlower">—</span></div>
+        <div class="grammar-row"><span class="grammar-key">Region</span><span class="grammar-val dynamic" id="gRegion">—</span></div>
+        <div class="grammar-row"><span class="grammar-key">Species</span><span class="grammar-val dynamic" id="gSpecies">—</span></div>
+        <div class="grammar-row"><span class="grammar-key">Palette</span><span class="grammar-val dynamic" id="gPalette">—</span></div>
+        <div class="grammar-row"><span class="grammar-key">Seed</span><span class="grammar-val dynamic" id="gSeed">—</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer class="page-footer">
+  <div class="page">
+    <p>Generative Brand Identity Prototype — Runtime brand rendering.<br>Flower illustrations generated with Gemini 3.1 Flash Image. Procedural flowers rendered via Canvas API with seeded PRNG.</p>
+  </div>
+</footer>
+
+<script>
+// ===================================================================
+// PRNG & COLOR UTILITIES
+// ===================================================================
+function mulberry32(a) {
+  return function() {
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function makeRng(seed) { return mulberry32(seed); }
+function rngRange(rng, min, max) { return min + rng() * (max - min); }
+function rngInt(rng, min, max) { return Math.floor(rngRange(rng, min, max + 1)); }
+function rngChoice(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+
+function hexToRgb(hex) {
+  return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+}
+function rgbToHex(r,g,b) {
+  return '#' + [r,g,b].map(c => Math.max(0,Math.min(255,Math.round(c))).toString(16).padStart(2,'0')).join('');
+}
+function lerpColor(a,b,t) {
+  const [r1,g1,b1]=hexToRgb(a), [r2,g2,b2]=hexToRgb(b);
+  return rgbToHex(r1+(r2-r1)*t, g1+(g2-g1)*t, b1+(b2-b1)*t);
+}
+function lighten(hex,amt) { const [r,g,b]=hexToRgb(hex); return rgbToHex(r+(255-r)*amt,g+(255-g)*amt,b+(255-b)*amt); }
+function darken(hex,amt) { const [r,g,b]=hexToRgb(hex); return rgbToHex(r*(1-amt),g*(1-amt),b*(1-amt)); }
+function withAlpha(hex,a) { const [r,g,b]=hexToRgb(hex); return `rgba(${r},${g},${b},${a})`; }
+
+// ===================================================================
+// BRAND GRAMMAR — LOCATION → FLOWER
+// ===================================================================
+const LOCATIONS = {
+  india:        { name:'India',        flower:'Lotus',          type:'lotus',          img:'assets/v2/f-lotus-india-nobg.png',           colors:{ petals:['#F48FB1','#F8BBD0','#FCE4EC'], inner:['#E91E63','#EC407A'], center:'#FFD700', accent:'#E91E63' }},
+  japan:        { name:'Japan',        flower:'Sakura',         type:'cherry_blossom', img:'assets/v2/f-sakura-japan-nobg.png',           colors:{ petals:['#FFB7C5','#FFCDD2','#FFF0F3'], inner:['#F48FB1','#F06292'], center:'#C2185B', accent:'#F06292' }},
+  netherlands:  { name:'Netherlands',  flower:'Tulip',          type:'tulip',          img:'assets/v2/f-tulip-netherlands-nobg.png',      colors:{ petals:['#E63946','#EF5350','#FF8A80'], inner:['#C62828','#D32F2F'], center:'#388E3C', accent:'#E63946' }},
+  england:      { name:'England',      flower:'Rose',           type:'rose',           img:'assets/v2/f-rose-england-nobg.png',           colors:{ petals:['#E8536A','#F06292','#F48FB1'], inner:['#C62828','#AD1457'], center:'#FFD54F', accent:'#E8536A' }},
+  mexico:       { name:'Mexico',       flower:'Marigold',       type:'marigold',       img:'assets/v2/f-marigold-mexico-nobg.png',        colors:{ petals:['#FF8F00','#FFA000','#FFB300'], inner:['#E65100','#EF6C00'], center:'#5D4037', accent:'#FF8F00' }},
+  france:       { name:'France',       flower:'Lavender',       type:'lavender',       img:'assets/v2/f-lavender-france-nobg.png',        colors:{ petals:['#9575CD','#B39DDB','#D1C4E9'], inner:['#7E57C2','#673AB7'], center:'#4A7C59', accent:'#7E57C2' }},
+  south_africa: { name:'South Africa', flower:'Protea',         type:'protea',         img:'assets/v2/f-protea-southafrica-nobg.png',     colors:{ petals:['#E8536A','#D81B60','#F06292'], inner:['#880E4F','#AD1457'], center:'#F5F5DC', accent:'#D81B60' }},
+  hawaii:       { name:'Hawaii',       flower:'Hibiscus',       type:'hibiscus',       img:'assets/v2/f-hibiscus-hawaii-nobg.png',        colors:{ petals:['#FF1744','#FF5252','#FF8A80'], inner:['#D50000','#C62828'], center:'#FFD600', accent:'#FF1744' }},
+  colombia:     { name:'Colombia',     flower:'Orchid',         type:'orchid',         img:'assets/v2/f-orchid-colombia-nobg.png',        colors:{ petals:['#AB47BC','#CE93D8','#F3E5F5'], inner:['#7B1FA2','#8E24AA'], center:'#FFD600', accent:'#AB47BC' }},
+  usa:          { name:'USA',          flower:'Sunflower',      type:'sunflower',      img:'assets/v2/f-sunflower-usa-nobg.png',          colors:{ petals:['#FFD600','#FFEA00','#FFF176'], inner:['#F9A825','#F57F17'], center:'#4E342E', accent:'#F9A825' }},
+};
+
+// ===================================================================
+// PETAL DRAWING PRIMITIVES
+// ===================================================================
+function drawPetal(ctx,cx,cy,angle,length,width,opts={}) {
+  const {tipRound=0.3,curve=0,color1='#000',color2,stroke,strokeWidth=1}=opts;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(angle);
+  ctx.beginPath(); ctx.moveTo(0,0);
+  ctx.bezierCurveTo(width*(0.5+curve),-length*0.25, width*0.85,-length*(1-tipRound), 0,-length);
+  ctx.bezierCurveTo(-width*0.85,-length*(1-tipRound), -width*(0.5+curve),-length*0.25, 0,0);
+  ctx.closePath();
+  if(color2){const g=ctx.createLinearGradient(0,0,0,-length);g.addColorStop(0,color1);g.addColorStop(1,color2);ctx.fillStyle=g;}
+  else ctx.fillStyle=color1;
+  ctx.fill();
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=strokeWidth;ctx.stroke();}
+  ctx.restore();
+}
+
+function drawNotchedPetal(ctx,cx,cy,angle,length,width,opts={}) {
+  const {color1='#000',color2,notchDepth=0.15}=opts;
+  ctx.save(); ctx.translate(cx,cy); ctx.rotate(angle);
+  ctx.beginPath(); ctx.moveTo(0,0);
+  ctx.bezierCurveTo(width*0.6,-length*0.2, width*0.9,-length*0.6, width*0.3,-length);
+  ctx.bezierCurveTo(width*0.15,-length*(1-notchDepth), -width*0.15,-length*(1-notchDepth), -width*0.3,-length);
+  ctx.bezierCurveTo(-width*0.9,-length*0.6, -width*0.6,-length*0.2, 0,0);
+  ctx.closePath();
+  if(color2){const g=ctx.createLinearGradient(0,0,0,-length);g.addColorStop(0,color1);g.addColorStop(1,color2);ctx.fillStyle=g;}
+  else ctx.fillStyle=color1;
+  ctx.fill(); ctx.restore();
+}
+
+function drawCircle(ctx,x,y,r,color) {
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
+}
+
+// ===================================================================
+// FLOWER RENDERERS
+// ===================================================================
+function drawRose(ctx,cx,cy,size,colors,rng) {
+  const layers=rngInt(rng,3,5);
+  for(let l=layers;l>=0;l--){
+    const t=l/layers, lr=size*(0.25+0.75*t), pc=rngInt(rng,5,7), pl=lr*0.65, pw=lr*0.38, ao=rng()*Math.PI*2/pc;
+    const bc=rngChoice(rng,colors.petals), ic=rngChoice(rng,colors.inner);
+    for(let i=0;i<pc;i++){
+      const a=(i/pc)*Math.PI*2+ao, d=lr*0.3;
+      drawPetal(ctx,cx+Math.cos(a)*d,cy+Math.sin(a)*d,a-Math.PI/2,pl*rngRange(rng,0.85,1.15),pw*rngRange(rng,0.9,1.1),
+        {tipRound:0.45,curve:rngRange(rng,-0.1,0.15),color1:ic,color2:lighten(bc,0.2),stroke:darken(ic,0.15),strokeWidth:0.5});
+    }
+  }
+  drawCircle(ctx,cx,cy,size*0.07,colors.center);
+  for(let i=0;i<5;i++){const a=(i/5)*Math.PI*2+rng();drawCircle(ctx,cx+Math.cos(a)*size*0.04,cy+Math.sin(a)*size*0.04,size*0.015,darken(colors.center,0.2));}
+}
+
+function drawCherryBlossom(ctx,cx,cy,size,colors,rng) {
+  for(let i=0;i<5;i++){
+    const a=(i/5)*Math.PI*2+rng()*0.3, c1=rngChoice(rng,colors.petals);
+    drawNotchedPetal(ctx,cx,cy,a-Math.PI/2,size*0.48*rngRange(rng,0.92,1.08),size*0.32*rngRange(rng,0.9,1.1),{color1:c1,color2:lighten(c1,0.3),notchDepth:rngRange(rng,0.1,0.2)});
+  }
+  drawCircle(ctx,cx,cy,size*0.08,lighten(colors.center,0.3));
+  for(let i=0;i<rngInt(rng,6,10);i++){
+    const a=rng()*Math.PI*2, len=size*rngRange(rng,0.12,0.22);
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(a);
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-len);ctx.strokeStyle=darken(colors.center,0.1);ctx.lineWidth=1;ctx.stroke();ctx.restore();
+    drawCircle(ctx,cx+Math.cos(a)*len,cy+Math.sin(a)*len,size*0.02,rngChoice(rng,colors.inner));
+  }
+}
+
+function drawTulip(ctx,cx,cy,size,colors,rng) {
+  const pc=rngInt(rng,4,6), pl=size*0.55, pw=size*0.28;
+  for(let i=0;i<pc;i++){
+    const a=-Math.PI/2+(i-(pc-1)/2)*0.5/(pc-1), c=rngChoice(rng,colors.petals);
+    drawPetal(ctx,cx,cy+size*0.15,a,pl*rngRange(rng,0.9,1.1),pw*rngRange(rng,0.9,1.1),{tipRound:0.2,curve:rngRange(rng,-0.05,0.1),color1:rngChoice(rng,colors.inner),color2:lighten(c,0.15),stroke:darken(c,0.2),strokeWidth:0.4});
+  }
+  for(let i=0;i<2;i++){
+    const a=-Math.PI/2+(i===0?-0.12:0.12), c=rngChoice(rng,colors.petals);
+    drawPetal(ctx,cx,cy+size*0.15,a,pl*1.05,pw*1.1,{tipRound:0.18,color1:c,color2:lighten(c,0.25),stroke:darken(c,0.15),strokeWidth:0.5});
+  }
+  ctx.beginPath();ctx.moveTo(cx,cy+size*0.15);ctx.lineTo(cx,cy+size*0.55);ctx.strokeStyle=colors.center;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.stroke();
+}
+
+function drawLotus(ctx,cx,cy,size,colors,rng) {
+  for(let l=rngInt(rng,2,3);l>=0;l--){
+    const t=l/3, pc=l===0?rngInt(rng,5,7):rngInt(rng,7,10), pl=size*(0.3+0.25*t), pw=size*(0.12+0.06*t), ao=l*0.3+rng()*0.2;
+    for(let i=0;i<pc;i++){
+      const a=(i/pc)*Math.PI*2+ao, c=lerpColor(rngChoice(rng,colors.inner),rngChoice(rng,colors.petals),t*0.7+0.3);
+      drawPetal(ctx,cx,cy,a-Math.PI/2,pl*rngRange(rng,0.9,1.1),pw*rngRange(rng,0.9,1.1),{tipRound:0.15,curve:rngRange(rng,-0.05,0.1),color1:rngChoice(rng,colors.inner),color2:lighten(c,0.35),stroke:withAlpha(darken(c,0.2),0.3),strokeWidth:0.5});
+    }
+  }
+  drawCircle(ctx,cx,cy,size*0.08,colors.center);
+  for(let i=0;i<8;i++){const a=(i/8)*Math.PI*2;drawCircle(ctx,cx+Math.cos(a)*size*0.045,cy+Math.sin(a)*size*0.045,size*0.012,darken(colors.center,0.2));}
+}
+
+function drawMarigold(ctx,cx,cy,size,colors,rng) {
+  for(let r=rngInt(rng,4,6);r>=0;r--){
+    const t=r/6, pc=rngInt(rng,10,16), pl=size*(0.12+0.25*t), pw=size*(0.05+0.04*t), ao=r*0.2+rng()*0.3;
+    for(let i=0;i<pc;i++){
+      const a=(i/pc)*Math.PI*2+ao, c=rngChoice(rng,colors.petals);
+      drawPetal(ctx,cx,cy,a-Math.PI/2,pl*rngRange(rng,0.85,1.15),pw*rngRange(rng,0.85,1.15),{tipRound:0.35,curve:rngRange(rng,-0.1,0.15),color1:rngChoice(rng,colors.inner),color2:lighten(c,0.2)});
+    }
+  }
+  drawCircle(ctx,cx,cy,size*0.06,colors.center);
+}
+
+function drawSunflower(ctx,cx,cy,size,colors,rng) {
+  const pc=rngInt(rng,14,20);
+  for(let i=0;i<pc;i++){
+    const a=(i/pc)*Math.PI*2+rng()*0.15, c=rngChoice(rng,colors.petals);
+    drawPetal(ctx,cx,cy,a-Math.PI/2,size*0.38*rngRange(rng,0.88,1.12),size*0.1*rngRange(rng,0.85,1.15),{tipRound:0.2,curve:rngRange(rng,-0.05,0.1),color1:rngChoice(rng,colors.inner),color2:c,stroke:darken(c,0.15),strokeWidth:0.3});
+  }
+  const cr=size*0.2; drawCircle(ctx,cx,cy,cr,colors.center);
+  for(let i=0;i<60;i++){const r=cr*Math.sqrt(i/60)*0.9,a=i*2.399963;drawCircle(ctx,cx+Math.cos(a)*r,cy+Math.sin(a)*r,size*0.012,lighten(colors.center,0.2+rng()*0.15));}
+}
+
+function drawLavender(ctx,cx,cy,size,colors,rng) {
+  const sl=size*0.6, sc=rngRange(rng,-8,8);
+  ctx.beginPath();ctx.moveTo(cx,cy+size*0.3);ctx.quadraticCurveTo(cx+sc,cy-sl*0.3,cx+sc*0.5,cy-sl*0.5);ctx.strokeStyle=colors.center;ctx.lineWidth=2.5;ctx.lineCap='round';ctx.stroke();
+  for(let i=0;i<rngInt(rng,10,16);i++){
+    const t=i/16, bx=cx+sc*(1-t)*0.5, by=cy+size*0.3-t*sl*0.85, bs=size*(0.04+0.03*(1-Math.abs(t-0.4)*2)), s=i%2===0?1:-1;
+    ctx.save();ctx.translate(bx+s*size*0.03,by);ctx.beginPath();ctx.ellipse(0,0,bs*0.7,bs*1.3,s*0.2,0,Math.PI*2);ctx.fillStyle=rngChoice(rng,colors.petals);ctx.fill();ctx.restore();
+  }
+  for(let i=0;i<5;i++){const a=(i/5)*Math.PI*2+rng(),d=size*rngRange(rng,0.02,0.06);drawCircle(ctx,cx+sc*0.5+Math.cos(a)*d,cy-sl*0.5+sc*0.5+Math.sin(a)*d,size*0.03,rngChoice(rng,colors.inner));}
+}
+
+function drawHibiscus(ctx,cx,cy,size,colors,rng) {
+  for(let i=0;i<5;i++){
+    const a=(i/5)*Math.PI*2+rng()*0.2, c=rngChoice(rng,colors.petals);
+    drawPetal(ctx,cx,cy,a-Math.PI/2,size*0.48*rngRange(rng,0.9,1.1),size*0.32*rngRange(rng,0.9,1.1),{tipRound:0.4,curve:rngRange(rng,0,0.15),color1:rngChoice(rng,colors.inner),color2:lighten(c,0.2),stroke:darken(c,0.1),strokeWidth:0.5});
+  }
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx,cy-size*0.28);ctx.strokeStyle=colors.center;ctx.lineWidth=3;ctx.lineCap='round';ctx.stroke();
+  for(let i=0;i<6;i++) drawCircle(ctx,cx,cy-size*(0.15+i*0.025),size*0.018,colors.center);
+  drawCircle(ctx,cx,cy-size*0.28,size*0.03,colors.center);
+}
+
+function drawProtea(ctx,cx,cy,size,colors,rng) {
+  const bc=rngInt(rng,12,18);
+  for(let i=0;i<bc;i++){
+    const a=(i/bc)*Math.PI*2+rng()*0.1, c=rngChoice(rng,colors.petals);
+    drawPetal(ctx,cx,cy,a-Math.PI/2,size*0.45*rngRange(rng,0.85,1.15),size*0.1,{tipRound:0.12,color1:c,color2:darken(c,0.15),stroke:darken(c,0.25),strokeWidth:0.5});
+  }
+  for(let i=0;i<rngInt(rng,20,35);i++){
+    const a=rng()*Math.PI*2, d=rng()*size*0.18, len=size*rngRange(rng,0.05,0.12), ia=rng()*Math.PI*2;
+    ctx.save();ctx.translate(cx+Math.cos(a)*d,cy+Math.sin(a)*d);ctx.rotate(ia);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-len);ctx.strokeStyle=withAlpha(colors.center,0.7);ctx.lineWidth=1.5;ctx.lineCap='round';ctx.stroke();drawCircle(ctx,0,-len,1.5,colors.center);ctx.restore();
+  }
+}
+
+function drawOrchid(ctx,cx,cy,size,colors,rng) {
+  for(let s of[-1,1]) drawPetal(ctx,cx,cy,-Math.PI/2+s*0.7,size*0.42,size*0.22,{tipRound:0.35,curve:s*0.1,color1:rngChoice(rng,colors.petals),color2:lighten(rngChoice(rng,colors.petals),0.3),stroke:withAlpha(rngChoice(rng,colors.inner),0.3),strokeWidth:0.5});
+  drawPetal(ctx,cx,cy,-Math.PI/2,size*0.38,size*0.18,{tipRound:0.3,color1:rngChoice(rng,colors.petals),color2:lighten(rngChoice(rng,colors.petals),0.35)});
+  for(let s of[-1,1]) drawPetal(ctx,cx,cy,Math.PI/2+s*0.5-Math.PI,size*0.35,size*0.12,{tipRound:0.25,color1:rngChoice(rng,colors.inner),color2:rngChoice(rng,colors.petals)});
+  ctx.save();ctx.translate(cx,cy+size*0.05);ctx.beginPath();ctx.ellipse(0,0,size*0.12,size*0.08,0,0,Math.PI*2);
+  const lg=ctx.createRadialGradient(0,0,0,0,0,size*0.12);lg.addColorStop(0,colors.center);lg.addColorStop(1,rngChoice(rng,colors.inner));ctx.fillStyle=lg;ctx.fill();ctx.restore();
+  for(let i=0;i<8;i++){const a=rng()*Math.PI*2,d=rng()*size*0.2;drawCircle(ctx,cx+Math.cos(a)*d,cy+Math.sin(a)*d,size*0.01,withAlpha(rngChoice(rng,colors.inner),0.4));}
+}
+
+const RENDERERS = { rose:drawRose, cherry_blossom:drawCherryBlossom, tulip:drawTulip, lotus:drawLotus, marigold:drawMarigold, sunflower:drawSunflower, lavender:drawLavender, hibiscus:drawHibiscus, protea:drawProtea, orchid:drawOrchid };
+
+function drawFlower(ctx,cx,cy,size,locKey,seed) {
+  const loc=LOCATIONS[locKey], rng=makeRng(seed), fn=RENDERERS[loc.type];
+  if(fn) fn(ctx,cx,cy,size,loc.colors,rng);
+}
+
+// ===================================================================
+// CANVAS HELPERS
+// ===================================================================
+function setupCanvas(canvas, w, h) {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = w * dpr;
+  canvas.height = h * dpr;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return ctx;
+}
+
+function renderFlowerCanvas(canvas, locKey, seed, w, h) {
+  const ctx = setupCanvas(canvas, w, h);
+  ctx.clearRect(0, 0, w, h);
+  drawFlower(ctx, w/2, h/2, Math.min(w,h)*0.42, locKey, seed);
+}
+
+// ===================================================================
+// UI STATE
+// ===================================================================
+let currentLoc = 'india';
+let currentSeed = Math.floor(Math.random()*100000);
+let currentMode = 'ai'; // 'ai' | 'proc'
+
+function randomSeed() { return Math.floor(Math.random()*100000); }
+
+// ===================================================================
+// UI UPDATES
+// ===================================================================
+function setAccentColor(loc) {
+  const accent = loc.colors.accent;
+  const [r,g,b] = hexToRgb(accent);
+  document.documentElement.style.setProperty('--accent', accent);
+  document.documentElement.style.setProperty('--accent-wash', `rgba(${r},${g},${b},0.04)`);
+}
+
+function updateHero() {
+  const loc = LOCATIONS[currentLoc];
+  setAccentColor(loc);
+
+  // Labels
+  const label = `${loc.name} &middot; ${loc.flower}`;
+  document.getElementById('locLabel').innerHTML = label;
+  document.getElementById('locLabel2').innerHTML = label;
+  document.getElementById('seedTag').textContent = currentMode === 'proc' ? `seed: ${currentSeed}` : 'curated';
+
+  // AI mode
+  if (currentMode === 'ai') {
+    document.getElementById('aiMark').style.display = 'block';
+    document.getElementById('procMark').style.display = 'none';
+    document.getElementById('aiFlowerImg').src = loc.img;
+    document.getElementById('aiFlowerImg').alt = loc.flower;
+  } else {
+    document.getElementById('aiMark').style.display = 'none';
+    document.getElementById('procMark').style.display = 'block';
+    const canvas = document.getElementById('procFlowerCanvas');
+    canvas.style.display = 'inline-block';
+    renderFlowerCanvas(canvas, currentLoc, currentSeed, 120, 120);
+  }
+
+  // Grammar panel
+  document.getElementById('gFlower').textContent = loc.flower;
+  document.getElementById('gRegion').textContent = loc.name;
+  document.getElementById('gSpecies').textContent = loc.type.replace('_',' ');
+  document.getElementById('gSeed').textContent = currentMode === 'proc' ? currentSeed : '—';
+
+  const swatches = [...loc.colors.petals, ...loc.colors.inner].map(c =>
+    `<span class="palette-dot" style="background:${c}"></span>`
+  ).join('');
+  document.getElementById('gPalette').innerHTML = `<span class="palette-row">${swatches}</span>`;
+
+  // Active state on world cards
+  document.querySelectorAll('.loc-card').forEach(card => {
+    card.classList.toggle('active', card.dataset.loc === currentLoc);
+  });
+}
+
+function generateVariants() {
+  const grid = document.getElementById('variantsGrid');
+  grid.innerHTML = '';
+  const loc = LOCATIONS[currentLoc];
+
+  for (let i = 0; i < 8; i++) {
+    const seed = randomSeed();
+    const card = document.createElement('div');
+    card.className = 'variant-card';
+
+    const canvas = document.createElement('canvas');
+    renderFlowerCanvas(canvas, currentLoc, seed, 200, 150);
+    card.appendChild(canvas);
+
+    const meta = document.createElement('div');
+    meta.className = 'v-meta';
+    meta.innerHTML = `<span class="v-dot" style="background:${loc.colors.accent}"></span><span>seed: ${seed}</span>`;
+    card.appendChild(meta);
+
+    card.addEventListener('click', () => {
+      currentSeed = seed;
+      currentMode = 'proc';
+      setModeUI('proc');
+      updateHero();
+      document.querySelectorAll('.variant-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    grid.appendChild(card);
+  }
+}
+
+function renderWorldGrid() {
+  const grid = document.getElementById('worldGrid');
+  grid.innerHTML = '';
+
+  for (const [key, loc] of Object.entries(LOCATIONS)) {
+    const card = document.createElement('div');
+    card.className = 'loc-card';
+    card.dataset.loc = key;
+    if (key === currentLoc) card.classList.add('active');
+
+    const imgWrap = document.createElement('div');
+    imgWrap.className = 'loc-card-img';
+    const img = document.createElement('img');
+    img.src = loc.img;
+    img.alt = loc.flower;
+    img.loading = 'lazy';
+    imgWrap.appendChild(img);
+    card.appendChild(imgWrap);
+
+    const info = document.createElement('div');
+    info.className = 'loc-card-info';
+    info.innerHTML = `
+      <div class="loc-card-name"><span class="loc-dot" style="background:${loc.colors.accent}"></span>${loc.name}</div>
+      <div class="loc-card-flower">${loc.flower}</div>
+    `;
+    card.appendChild(info);
+
+    card.addEventListener('click', () => {
+      currentLoc = key;
+      currentSeed = randomSeed();
+      document.getElementById('locationSelect').value = key;
+      updateHero();
+      generateVariants();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    grid.appendChild(card);
+  }
+}
+
+function setModeUI(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+}
+
+function populateSelect() {
+  const sel = document.getElementById('locationSelect');
+  for (const [key, loc] of Object.entries(LOCATIONS)) {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = `${loc.name} — ${loc.flower}`;
+    sel.appendChild(opt);
+  }
+  sel.value = currentLoc;
+}
+
+// ===================================================================
+// EVENT HANDLERS
+// ===================================================================
+function bindEvents() {
+  // Mode toggle
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setModeUI(btn.dataset.mode);
+      if (btn.dataset.mode === 'proc') currentSeed = randomSeed();
+      updateHero();
+      if (btn.dataset.mode === 'proc') generateVariants();
+    });
+  });
+
+  // Location select
+  document.getElementById('locationSelect').addEventListener('change', (e) => {
+    currentLoc = e.target.value;
+    currentSeed = randomSeed();
+    updateHero();
+    generateVariants();
+    renderWorldGrid();
+  });
+
+  // Regenerate
+  document.getElementById('generateBtn').addEventListener('click', () => {
+    currentSeed = randomSeed();
+    if (currentMode === 'ai') { setModeUI('proc'); }
+    updateHero();
+    generateVariants();
+  });
+
+  // Random location
+  document.getElementById('randomBtn').addEventListener('click', () => {
+    const keys = Object.keys(LOCATIONS);
+    currentLoc = keys[Math.floor(Math.random()*keys.length)];
+    currentSeed = randomSeed();
+    document.getElementById('locationSelect').value = currentLoc;
+    updateHero();
+    generateVariants();
+    renderWorldGrid();
+  });
+}
+
+// ===================================================================
+// INIT
+// ===================================================================
+function init() {
+  populateSelect();
+  updateHero();
+  generateVariants();
+  renderWorldGrid();
+  bindEvents();
+}
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(init);
+} else {
+  window.addEventListener('load', init);
+}
+</script>
+</body>
+</html>
